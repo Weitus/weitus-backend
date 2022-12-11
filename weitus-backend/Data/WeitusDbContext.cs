@@ -5,7 +5,7 @@ using weitus_backend.Data.Models;
 
 namespace weitus_backend.Data
 {
-	public class WeitusDbContext : IdentityUserContext<IdentityUser>
+	public class WeitusDbContext : IdentityUserContext<WeitusUser>
 	{
 		public DbSet<ChatMessage> ChatMessages { get; set; }
 

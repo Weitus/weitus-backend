@@ -6,70 +6,79 @@ using weitus_backend.Services;
 
 namespace weitus_backend.Controllers
 {
-	[ApiController]
-	[Route("auth")]
-	public class AuthController : ControllerBase
-	{
-		private readonly ILogger<AuthController> _logger;
-		private readonly UserManager<WeitusUser> _userManager;
-		private readonly JwtService _jwtService;
+    [ApiController]
+    [Route("auth")]
+    public class AuthController : ControllerBase
+    {
+        private readonly ILogger<AuthController> _logger;
+        private readonly UserManager<WeitusUser> _userManager;
+        private readonly JwtService _jwtService;
 
-		public AuthController(ILogger<AuthController> logger, UserManager<WeitusUser> userManager, JwtService jwtService)
-		{
-			_logger = logger;
-			_userManager = userManager;
-			_jwtService = jwtService;
-		}
+        public AuthController(ILogger<AuthController> logger, UserManager<WeitusUser> userManager, JwtService jwtService)
+        {
+            _logger = logger;
+            _userManager = userManager;
+            _jwtService = jwtService;
+        }
 
-		[HttpPost("register")]
-		public async Task<IActionResult> Register([FromBody] RegisterUser registerUser)
-		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-			
-			var user = new WeitusUser
-			{
-				UserName = registerUser.UserName,
-				Email = registerUser.Email
-			};
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterUser registerUser)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-			var result = await _userManager.CreateAsync(user, registerUser.Password);
+            var user = new WeitusUser
+            {
+                UserName = registerUser.UserName,
+                Email = registerUser.Email
+            };
 
-			if (result.Succeeded)
-			{
-				return Ok();
-			}
+            var result = await _userManager.CreateAsync(user, registerUser.Password);
 
-			return BadRequest(result.Errors);
-		}
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
 
-		[HttpPost("login")]
-		public async Task<IActionResult> Login([FromBody] LoginUser loginUser)
-		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest("Bad credentials.");
-			}
+            return BadRequest(result.Errors);
+        }
 
-			var user = await _userManager.FindByNameAsync(loginUser.UserName);
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUser loginUser)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ErrorResponse()
+                {
+                    Message = "Invalid login data"
+                });
+            }
 
-			if (user == null)
-			{
-				return BadRequest("Bad credentials");
-			}
+            var user = await _userManager.FindByNameAsync(loginUser.UserName);
 
-			var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginUser.Password);
+            if (user == null)
+            {
+                return BadRequest(new ErrorResponse()
+                {
+                    Message = "Bad username/password combination"
+                });
+            }
 
-			if (!isPasswordValid)
-			{
-				return BadRequest("Bad credentials");
-			}
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginUser.Password);
 
-			var token = _jwtService.CreateToken(user);
+            if (!isPasswordValid)
+            {
+                return BadRequest(new ErrorResponse()
+                {
+                    Message = "Bad username/password combination"
+                });
+            }
 
-			return Ok(token);
-		}
-	}
+            var token = _jwtService.CreateToken(user);
+
+            return Ok(token);
+        }
+    }
 }

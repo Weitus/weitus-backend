@@ -10,6 +10,8 @@ namespace weitus_backend
 {
 	public class Startup
 	{
+		internal const string corsPolicyName = "CorsPolicy";
+
 		protected IConfiguration Configuration { get; }
 
 		public Startup(IConfiguration configuration)
@@ -19,6 +21,15 @@ namespace weitus_backend
 
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddCors(options => {
+				options.AddPolicy(corsPolicyName, builder => builder
+					.AllowAnyOrigin()
+					.AllowAnyMethod()
+					.AllowAnyHeader()
+					.AllowCredentials()
+					.Build());
+			});
+
 			services.AddControllers();
 			services.AddEndpointsApiExplorer();
 			services.AddSwaggerGen();

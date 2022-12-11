@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using weitus_backend.Data;
 using weitus_backend.Data.Dto;
 using weitus_backend.Data.Models;
-using weitus_backend.Services;
 
 namespace weitus_backend.Controllers
 {
@@ -31,6 +30,11 @@ namespace weitus_backend.Controllers
 			{
 				return BadRequest(ModelState);
 			}
+
+            foreach (var claim in User.Claims)
+            {
+                Console.WriteLine(claim.Type + ": " + claim.Value);
+            }
 
 			var user = await _userManager.GetUserAsync(User);
 

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "weitus-backend", "weitus-backend\weitus-backend.csproj", "{A7173AFD-DF24-4C82-9B56-1689423EF194}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "weitus-backend-tests", "weitus-backend-tests\weitus-backend-tests.csproj", "{BF5B4F6D-D07A-4200-B22A-9617438B2124}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A7173AFD-DF24-4C82-9B56-1689423EF194}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7173AFD-DF24-4C82-9B56-1689423EF194}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7173AFD-DF24-4C82-9B56-1689423EF194}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF5B4F6D-D07A-4200-B22A-9617438B2124}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF5B4F6D-D07A-4200-B22A-9617438B2124}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF5B4F6D-D07A-4200-B22A-9617438B2124}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF5B4F6D-D07A-4200-B22A-9617438B2124}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
