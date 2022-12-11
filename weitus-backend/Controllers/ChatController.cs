@@ -31,11 +31,6 @@ namespace weitus_backend.Controllers
 				return BadRequest(ModelState);
 			}
 
-            foreach (var claim in User.Claims)
-            {
-                Console.WriteLine(claim.Type + ": " + claim.Value);
-            }
-
 			var user = await _userManager.GetUserAsync(User);
 
 			var chatMessage = new ChatMessage
