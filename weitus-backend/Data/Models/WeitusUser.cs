@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#nullable disable
+
+using Microsoft.AspNetCore.Identity;
 using System.Text.Json.Serialization;
 
 namespace weitus_backend.Data.Models

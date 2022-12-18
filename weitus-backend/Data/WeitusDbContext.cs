@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿#nullable disable
+
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using weitus_backend.Data.Models;

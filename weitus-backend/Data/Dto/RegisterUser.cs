@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#nullable disable
+
+using System.ComponentModel.DataAnnotations;
 
 namespace weitus_backend.Data.Dto
 {

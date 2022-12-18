@@ -1,4 +1,6 @@
-﻿namespace weitus_backend.Data.Dto
+﻿#nullable disable
+
+namespace weitus_backend.Data.Dto
 {
 	public class AuthenticationResponse
 	{

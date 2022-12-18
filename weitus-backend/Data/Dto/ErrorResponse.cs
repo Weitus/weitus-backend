@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace weitus_backend.Data.Dto;
 
 public class ErrorResponse
