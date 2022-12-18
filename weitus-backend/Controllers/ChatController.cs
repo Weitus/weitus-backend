@@ -47,6 +47,30 @@ namespace weitus_backend.Controllers
 		}
 
 		[Authorize]
+		[HttpPost("botMessage")]
+		public async Task<IActionResult> RegisterBotMessage([FromBody] SendChatMessage chatMessageDto)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			var user = await _userManager.GetUserAsync(User);
+
+			var chatMessage = new ChatMessage
+			{
+				ChatterId = user.Id,
+				Message = chatMessageDto.Message,
+				SentByBot = true,
+				TimeStamp = DateTime.Now
+			};
+
+			await _repo.Add(chatMessage);
+
+			return Ok(chatMessage);
+		}
+
+		[Authorize]
 		[HttpGet("messages")]
 		public async Task<IActionResult> GetMessages()
 		{
