@@ -9,19 +9,24 @@ namespace weitus_backend.Data.Models
 	public class ChatMessage
 	{
 		[Key]
-		public int Id { get; set; }
+		public int ChatMessageId { get; set; }
 
 		public DateTime TimeStamp { get; set; }
 
 		[StringLength(500)]
 		[ProtectedPersonalData]
+		[Required]
 		public string Message { get; set; }
 
+		[Required]
 		public string ChatterId { get; set; }
 
 		[JsonIgnore]
 		public WeitusUser Chatter { get; set; }
 
-		public bool SentByBot { get; set; }
+		public int? BotId { get; set; }
+
+		[JsonIgnore]
+		public ChatBot Bot { get; set; }
 	}
 }

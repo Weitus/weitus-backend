@@ -13,6 +13,8 @@ namespace weitus_backend.Data
 		void Delete<T>(T entity) where T : class;
 
 		Task<IEnumerable<ChatMessage>> GetMessageLog(WeitusUser user);
+
+		Task<ChatBot?> GetChatBot(int id);
 	}
 
 	public class WeitusRepository : IWeitusRepository
@@ -59,6 +61,11 @@ namespace weitus_backend.Data
 			}
 
 			return await _context.ChatMessages.Where(m => m.ChatterId == user.Id).OrderBy(m => m.TimeStamp).ToListAsync();
+		}
+
+		public async Task<ChatBot?> GetChatBot(int id)
+		{
+			return await _context.ChatBots.FirstOrDefaultAsync(b => b.ChatBotId == id);
 		}
 	}
 }

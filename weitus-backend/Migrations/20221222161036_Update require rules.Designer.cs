@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 using weitus_backend.Data;
@@ -11,9 +12,10 @@ using weitus_backend.Data;
 namespace weitus_backend.Migrations
 {
     [DbContext(typeof(WeitusDbContext))]
-    partial class WeitusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221222161036_Update require rules")]
+    partial class Updaterequirerules
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,7 +46,7 @@ namespace weitus_backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ASP_IDENTITY_CLAIMS", (string)null);
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -66,7 +68,7 @@ namespace weitus_backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ASP_IDENTITY_LOGINS", (string)null);
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -85,7 +87,7 @@ namespace weitus_backend.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("ASP_IDENTITY_TOKENS", (string)null);
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("weitus_backend.Data.Models.ChatBot", b =>
@@ -103,7 +105,7 @@ namespace weitus_backend.Migrations
 
                     b.HasKey("ChatBotId");
 
-                    b.ToTable("CHAT_BOTS", (string)null);
+                    b.ToTable("ChatBots");
 
                     b.HasData(
                         new
@@ -142,9 +144,7 @@ namespace weitus_backend.Migrations
 
                     b.HasIndex("ChatterId");
 
-                    b.HasIndex("TimeStamp");
-
-                    b.ToTable("CHAT_MESSAGES", (string)null);
+                    b.ToTable("ChatMessages");
                 });
 
             modelBuilder.Entity("weitus_backend.Data.Models.WeitusUser", b =>
@@ -209,7 +209,7 @@ namespace weitus_backend.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("\"NormalizedUserName\" IS NOT NULL");
 
-                    b.ToTable("ASP_IDENTITY_USERS", (string)null);
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>

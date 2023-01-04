@@ -127,14 +127,14 @@ public class ChatControllerTests
             User = new ClaimsPrincipal(new ClaimsIdentity(jwtToken.Claims))
         };
 
-        var sendResult = await controller.SendMessage(new SendChatMessage()
+        var sendResult = await controller.SendMessage(new SendBotChatMessage()
         {
             Message = "test"
         });
 
         Assert.IsType<OkObjectResult>(sendResult);
 
-        var sendResult2 = await controller.SendMessage(new SendChatMessage()
+        var sendResult2 = await controller.SendMessage(new SendBotChatMessage()
         {
             Message = "test2"
         });
