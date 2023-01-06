@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using weitus_backend.Data;
-using weitus_backend.Data.Models;
 using weitus_backend.Services;
 
 namespace weitus_backend
@@ -40,18 +39,8 @@ namespace weitus_backend
             });
 
             services.AddScoped<IWeitusRepository, WeitusRepository>();
-
-            services.AddIdentityCore<WeitusUser>(options =>
-            {
-                options.SignIn.RequireConfirmedAccount = false;
-                options.User.RequireUniqueEmail = true;
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 4;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-            })
-            .AddEntityFrameworkStores<WeitusDbContext>();
+            services.AddScoped<JwtService>();
+            services.AddScoped<UserManager>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -67,8 +56,6 @@ namespace weitus_backend
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
-
-            services.AddScoped<JwtService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

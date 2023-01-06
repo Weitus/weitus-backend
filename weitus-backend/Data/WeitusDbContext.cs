@@ -1,71 +1,65 @@
 ﻿#nullable disable
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using weitus_backend.Data.Models;
 
 namespace weitus_backend.Data
 {
-	public class WeitusDbContext : IdentityUserContext<WeitusUser>
-	{
-		public DbSet<ChatMessage> ChatMessages { get; set; }
+    public class WeitusDbContext : DbContext
+    {
+        public DbSet<WeitusUser> Users { get; set; }
 
-		public DbSet<ChatBot> ChatBots { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
 
-		public WeitusDbContext(DbContextOptions<WeitusDbContext> options) : base(options) { }
+        public DbSet<ChatBot> ChatBots { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder builder)
-		{
-			base.OnModelCreating(builder);
+        public WeitusDbContext(DbContextOptions<WeitusDbContext> options) : base(options) { }
 
-			builder.Entity<WeitusUser>(b =>
-			{
-				b.HasMany(e => e.ChatMessages)
-					.WithOne(e => e.Chatter)
-					.HasForeignKey(ut => ut.ChatterId)
-					.IsRequired();
-			});
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
 
-			builder.Entity<ChatMessage>(b =>
-			{
-				b.HasOne(e => e.Chatter)
-					.WithMany(e => e.ChatMessages)
-					.HasForeignKey(ut => ut.ChatterId)
-					.IsRequired();
+            builder.Entity<WeitusUser>(b =>
+            {
+                b.HasMany(e => e.ChatMessages)
+                    .WithOne(e => e.Chatter)
+                    .HasForeignKey(ut => ut.ChatterId)
+                    .IsRequired();
+            });
 
-				b.HasOne(e => e.Bot)
-					.WithMany(e => e.ChatMessages)
-					.HasForeignKey(ut => ut.BotId)
-					.IsRequired(false);
-			});
+            builder.Entity<ChatMessage>(b =>
+            {
+                b.HasOne(e => e.Chatter)
+                    .WithMany(e => e.ChatMessages)
+                    .HasForeignKey(ut => ut.ChatterId)
+                    .IsRequired();
 
-			builder.Entity<ChatBot>(b =>
-			{
-				b.HasMany(e => e.ChatMessages)
-					.WithOne(e => e.Bot)
-					.HasForeignKey(ut => ut.BotId)
-					.IsRequired(false);
-			});
+                b.HasOne(e => e.Bot)
+                    .WithMany(e => e.ChatMessages)
+                    .HasForeignKey(ut => ut.BotId)
+                    .IsRequired(false);
+            });
 
-			builder.Entity<ChatMessage>()
-				.HasIndex(e => e.TimeStamp);
+            builder.Entity<ChatBot>(b =>
+            {
+                b.HasMany(e => e.ChatMessages)
+                    .WithOne(e => e.Bot)
+                    .HasForeignKey(ut => ut.BotId)
+                    .IsRequired(false);
+            });
 
-			builder.Entity<ChatMessage>().ToTable("CHAT_MESSAGES");
+            builder.Entity<ChatMessage>()
+                .HasIndex(e => e.TimeStamp);
 
-			builder.Entity<ChatBot>().ToTable("CHAT_BOTS");
+            builder.Entity<ChatMessage>().ToTable("CHAT_MESSAGES");
 
-			builder.Entity<WeitusUser>().ToTable("ASP_IDENTITY_USERS");
+            builder.Entity<ChatBot>().ToTable("CHAT_BOTS");
 
-			builder.Entity<IdentityUserLogin<string>>().ToTable("ASP_IDENTITY_LOGINS");
+            builder.Entity<WeitusUser>().ToTable("USERS");
 
-			builder.Entity<IdentityUserClaim<string>>().ToTable("ASP_IDENTITY_CLAIMS");
+            // Seed
 
-			builder.Entity<IdentityUserToken<string>>().ToTable("ASP_IDENTITY_TOKENS");
-
-			// Seed
-
-			builder.Entity<ChatBot>().HasData(new ChatBot { ChatBotId = 1, Name = "Weituś" });
-		}
-	}
+            builder.Entity<ChatBot>().HasData(new ChatBot { ChatBotId = 1, Name = "Weituś" });
+        }
+    }
 }

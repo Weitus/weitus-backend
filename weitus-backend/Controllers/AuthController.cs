@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using weitus_backend.Data.Dto;
-using weitus_backend.Data.Models;
 using weitus_backend.Services;
 
 namespace weitus_backend.Controllers
@@ -11,10 +9,10 @@ namespace weitus_backend.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
-        private readonly UserManager<WeitusUser> _userManager;
+        private readonly UserManager _userManager;
         private readonly JwtService _jwtService;
 
-        public AuthController(ILogger<AuthController> logger, UserManager<WeitusUser> userManager, JwtService jwtService)
+        public AuthController(ILogger<AuthController> logger, UserManager userManager, JwtService jwtService)
         {
             _logger = logger;
             _userManager = userManager;
@@ -29,20 +27,14 @@ namespace weitus_backend.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new WeitusUser
-            {
-                UserName = registerUser.UserName,
-                Email = registerUser.Email
-            };
+            var result = await _userManager.RegisterUserAsync(registerUser);
 
-            var result = await _userManager.CreateAsync(user, registerUser.Password);
-
-            if (result.Succeeded)
+            if (result.Success)
             {
                 return Ok();
             }
 
-            return BadRequest(result.Errors);
+            return BadRequest((ErrorResponse)result);
         }
 
         [HttpPost("login")]
@@ -56,29 +48,14 @@ namespace weitus_backend.Controllers
                 });
             }
 
-            var user = await _userManager.FindByNameAsync(loginUser.UserName);
+            var authResponse = await _userManager.LoginUserAsync(loginUser);
 
-            if (user == null)
+            if (!authResponse.Success)
             {
-                return BadRequest(new ErrorResponse()
-                {
-                    Message = "Bad username/password combination"
-                });
+                return BadRequest((ErrorResponse)authResponse);
             }
 
-            var isPasswordValid = await _userManager.CheckPasswordAsync(user, loginUser.Password);
-
-            if (!isPasswordValid)
-            {
-                return BadRequest(new ErrorResponse()
-                {
-                    Message = "Bad username/password combination"
-                });
-            }
-
-            var token = _jwtService.CreateToken(user);
-
-            return Ok(token);
+            return Ok((AuthenticationResponse)authResponse);
         }
     }
 }
