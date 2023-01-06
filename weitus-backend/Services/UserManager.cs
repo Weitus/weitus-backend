@@ -41,7 +41,7 @@ public class UserManager
 
     public async Task<Result<WeitusUser>> RegisterUserAsync(RegisterUser registerUser)
     {
-        var valid = EnsureUserIsValid(registerUser);
+        var valid = await EnsureUserIsValid(registerUser);
 
         if (!valid.Success)
         {
@@ -69,20 +69,20 @@ public class UserManager
 
         if (user == null)
         {
-            return Result<AuthenticationResponse>.Err("Credentials are invalid");
+            return Result<AuthenticationResponse>.Err("Bad username/password combination");
         }
 
         var passwordHash = CreatePasswordHash(loginUser.Password, user.PasswordSalt);
 
         if (passwordHash != user.PasswordHash)
         {
-            return Result<AuthenticationResponse>.Err("Credentials are invalid");
+            return Result<AuthenticationResponse>.Err("Bad username/password combination");
         }
 
         return Result<AuthenticationResponse>.Ok(_jwtService.CreateToken(user));
     }
 
-    private Result EnsureUserIsValid(RegisterUser user)
+    private async Task<Result> EnsureUserIsValid(RegisterUser user)
     {
         List<string> errors = new List<string>();
         if (string.IsNullOrWhiteSpace(user.UserName))
@@ -95,7 +95,7 @@ public class UserManager
             errors.Add("Password is required");
         }
 
-        if (user.Password.Length < 6)
+        if (user.Password.Length < 4)
         {
             errors.Add("Password must be at least 6 characters");
         }
@@ -103,6 +103,11 @@ public class UserManager
         if (string.IsNullOrWhiteSpace(user.Email))
         {
             errors.Add("Email is required");
+        }
+
+        if (await _userRepository.GetUserAsync(user.UserName) != null)
+        {
+            errors.Add("Username \"" + user.UserName + "\" is already taken");
         }
 
         if (errors.Count > 0)

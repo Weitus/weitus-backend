@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -14,42 +12,35 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
+using weitus_backend.Services;
 
 namespace weitus_backend_tests;
 
 public class ChatControllerTests
 {
-    internal static ChatController CreateMockChatController()
+    internal static (ChatController, AuthController) CreateMockControllers()
     {
         var options = new DbContextOptionsBuilder<WeitusDbContext>()
-            .UseInMemoryDatabase(databaseName: "WeitusDatabase")
+            .UseInMemoryDatabase(databaseName: "ChatControllerTests")
             .Options;
         var context = new WeitusDbContext(options);
 
-        var userManager = new UserManager<WeitusUser>(
-            new UserStore<WeitusUser>(context),
-            null,
-            new PasswordHasher<WeitusUser>(),
-            new UserValidator<WeitusUser>[1] {
-                new UserValidator<WeitusUser>()
-            },
-            new IPasswordValidator<WeitusUser>[1] { new RelaxedPasswordValidator() },
-            null,
-            null,
-            null,
-            new NullLogger<UserManager<WeitusUser>>());
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
 
-        var repo = new WeitusRepository(context, userManager);
+        var repo = new WeitusRepository(context);
+        var jwtService = new JwtService(new MockConfiguration());
+        var userManager = new UserManager(repo, jwtService);
 
         var chatController = new ChatController(new NullLogger<ChatController>(), repo, userManager);
-        return chatController;
+        var authController = new AuthController(new NullLogger<AuthController>(), userManager, jwtService);
+        return (chatController, authController);
     }
 
     [Fact]
     public async Task TestGetMessages()
     {
-        var controller = CreateMockChatController();
-        var auth = AuthControllerTests.CreateAuthController();
+        var (controller, auth) = CreateMockControllers();
 
         var registerResult = await auth.Register(new RegisterUser()
         {
@@ -91,8 +82,7 @@ public class ChatControllerTests
 
     [Fact]
     public async Task TestSendMessage() {
-        var controller = CreateMockChatController();
-        var auth = AuthControllerTests.CreateAuthController();
+        var (controller, auth) = CreateMockControllers();
 
         var registerResult = await auth.Register(new RegisterUser()
         {
@@ -127,14 +117,14 @@ public class ChatControllerTests
             User = new ClaimsPrincipal(new ClaimsIdentity(jwtToken.Claims))
         };
 
-        var sendResult = await controller.SendMessage(new SendBotChatMessage()
+        var sendResult = await controller.SendMessage(new SendChatMessage()
         {
             Message = "test"
         });
 
         Assert.IsType<OkObjectResult>(sendResult);
 
-        var sendResult2 = await controller.SendMessage(new SendBotChatMessage()
+        var sendResult2 = await controller.SendMessage(new SendChatMessage()
         {
             Message = "test2"
         });
@@ -147,7 +137,7 @@ public class ChatControllerTests
 
         var resultValue = result as OkObjectResult;
 
-        Assert.IsType<IEnumerable<ChatMessage>>(resultValue.Value);
+        Assert.IsAssignableFrom<IEnumerable<ChatMessage>>(resultValue.Value);
 
         var resultValueValue = resultValue.Value as IEnumerable<ChatMessage>;
 

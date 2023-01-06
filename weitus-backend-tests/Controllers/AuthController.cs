@@ -4,9 +4,6 @@ using Xunit;
 using weitus_backend.Data;
 using weitus_backend.Controllers;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.AspNetCore.Identity;
-using weitus_backend.Data.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using weitus_backend.Services;
 using Microsoft.Extensions.Configuration;
@@ -55,17 +52,6 @@ class MockConfiguration : IConfiguration
     }
 }
 
-class RelaxedPasswordValidator : PasswordValidator<WeitusUser>
-{
-    public override Task<IdentityResult> ValidateAsync(UserManager<WeitusUser> manager, WeitusUser user, string password)
-    {
-        return Task.FromResult(IdentityResult.Success); // This could be improved to check 
-                                                        // the password *exactly* like the
-                                                        // requirements in the app, but they are
-                                                        // so low as of right now this is enough.
-    }
-}
-
 public class AuthControllerTests
 {
     internal static AuthController CreateAuthController(WeitusDbContext context = null)
@@ -73,7 +59,7 @@ public class AuthControllerTests
         if (context == null)
         {
             context = new WeitusDbContext(new DbContextOptionsBuilder<WeitusDbContext>()
-                .UseInMemoryDatabase("WeitusDatabase")
+                .UseInMemoryDatabase("AuthControllerTests")
                 .Options);
         }
 
@@ -81,20 +67,9 @@ public class AuthControllerTests
         context.Database.EnsureCreated();
 
         var logger = new NullLogger<AuthController>();
-        var userManager = new UserManager<WeitusUser>(
-            new UserStore<WeitusUser>(context),
-            null,
-            new PasswordHasher<WeitusUser>(),
-            new UserValidator<WeitusUser>[1] {
-                new UserValidator<WeitusUser>()
-            },
-            new IPasswordValidator<WeitusUser>[1] { new RelaxedPasswordValidator() },
-            null,
-            null,
-            null,
-            new NullLogger<UserManager<WeitusUser>>());
-
+        var repo = new WeitusRepository(context);
         var jwtService = new JwtService(new MockConfiguration());
+        var userManager = new UserManager(repo, jwtService);
 
         return new AuthController(logger, userManager, jwtService);
     }
