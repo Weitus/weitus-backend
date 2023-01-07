@@ -46,7 +46,7 @@ namespace weitus_backend.Services
 				signingCredentials: credentials
 			);
 
-		private Claim[] CreateClaims(WeitusUser user) =>
+		public Claim[] CreateClaims(WeitusUser user) =>
 			new[] {
 				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 				new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
@@ -54,6 +54,42 @@ namespace weitus_backend.Services
 				new Claim(ClaimTypes.Name, user.UserName),
 				new Claim(ClaimTypes.Email, user.Email)
 			};
+		
+		public Claim[] GetClaims(string token)
+		{
+			var tokenHandler = new JwtSecurityTokenHandler();
+			var jwtToken = tokenHandler.ReadJwtToken(token);
+			return jwtToken.Claims.ToArray();
+		}
+
+		public bool ValidateToken(string token)
+		{
+			var tokenHandler = new JwtSecurityTokenHandler();
+			var validationParameters = CreateValidationParameters(_configuration);
+
+			try
+			{
+				tokenHandler.ValidateToken(token, validationParameters, out _);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		public static TokenValidationParameters CreateValidationParameters(IConfiguration configuration) {
+			return new TokenValidationParameters
+			{
+				ValidateIssuer = true,
+				ValidateAudience = true,
+				ValidateLifetime = true,
+				ValidateIssuerSigningKey = true,
+				ValidIssuer = configuration["Jwt:Issuer"],
+				ValidAudience = configuration["Jwt:Issuer"],
+				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+			};
+		}
 
 		private SigningCredentials CreateSigningCredentials() =>
 			new SigningCredentials(

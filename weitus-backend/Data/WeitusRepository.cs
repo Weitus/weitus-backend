@@ -18,6 +18,8 @@ namespace weitus_backend.Data
         Task<WeitusUser?> GetUserAsync(int id);
 
         Task<WeitusUser?> GetUserAsync(string username);
+        
+        Task<WeitusUser?> GetUserByEmailAsync(string email);
     }
 
     public class WeitusRepository : IWeitusRepository
@@ -77,6 +79,11 @@ namespace weitus_backend.Data
         public async Task<WeitusUser?> GetUserAsync(string username)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        }
+
+        public async Task<WeitusUser?> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

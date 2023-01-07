@@ -28,6 +28,11 @@ public class UserManager
         return await _userRepository.GetUserAsync(username);
     }
 
+    public async Task<WeitusUser?> GetUserByEmailAsync(string email)
+    {
+        return await _userRepository.GetUserByEmailAsync(email);
+    }
+
     public async Task<WeitusUser?> GetUserAsync(ClaimsPrincipal claimsPrincipal)
     {
         var userId = claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -107,7 +112,12 @@ public class UserManager
 
         if (await _userRepository.GetUserAsync(user.UserName) != null)
         {
-            errors.Add("Username \"" + user.UserName + "\" is already taken");
+            errors.Add("Username is already taken");
+        }
+
+        if (await _userRepository.GetUserByEmailAsync(user.Email) != null)
+        {
+            errors.Add("Email is already in use");
         }
 
         if (errors.Count > 0)
