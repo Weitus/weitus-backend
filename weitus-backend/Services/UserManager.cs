@@ -11,11 +11,13 @@ public class UserManager
 {
     private readonly IWeitusRepository _userRepository;
     private readonly JwtService _jwtService;
+    private readonly IConfiguration _config;
 
-    public UserManager(IWeitusRepository userRepository, JwtService jwtService)
+    public UserManager(IWeitusRepository userRepository, JwtService jwtService, IConfiguration config)
     {
         _userRepository = userRepository;
         _jwtService = jwtService;
+        _config = config;
     }
 
     public async Task<WeitusUser?> GetUserAsync(int id)
@@ -93,7 +95,7 @@ public class UserManager
 
     private string GetChatSessionId(WeitusUser user)
     {
-        var hash = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(user.UserName + user.UserId + user.PasswordSalt));
+        var hash = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(user.UserName + user.UserId + _config["Chat:Secret"]));
 
         return Convert.ToBase64String(hash);
     }

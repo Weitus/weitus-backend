@@ -28,9 +28,10 @@ public class ChatControllerTests
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
+        var config = new MockConfiguration();
         var repo = new WeitusRepository(context);
-        var jwtService = new JwtService(new MockConfiguration());
-        var userManager = new UserManager(repo, jwtService);
+        var jwtService = new JwtService(config);
+        var userManager = new UserManager(repo, jwtService, config);
 
         var chatController = new ChatController(new NullLogger<ChatController>(), repo, userManager);
         var authController = new AuthController(new NullLogger<AuthController>(), userManager, jwtService);

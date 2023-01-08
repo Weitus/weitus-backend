@@ -18,6 +18,8 @@ class MockConfiguration : IConfiguration
                     return "http://localhost:5000";
                 case "Jwt:Key":
                     return "0123456789ABCDEF0123456789ABCDEF";
+                case "Chat:Secret":
+                    return "0123456789ABCDEF0123456789ABCDEF";
                 default:
                     return "";
             }

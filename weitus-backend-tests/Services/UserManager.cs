@@ -22,8 +22,9 @@ public class UserManagerTests
 
         var repo = new WeitusRepository(context);
         var jwtService = new JwtService(new MockConfiguration());
+        var config = new MockConfiguration();
 
-        return new UserManager(repo, jwtService);
+        return new UserManager(repo, jwtService, config);
     }
 
     [Fact]

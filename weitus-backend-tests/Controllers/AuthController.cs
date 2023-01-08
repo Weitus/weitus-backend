@@ -26,10 +26,11 @@ public class AuthControllerTests
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
+        var config = new MockConfiguration();
         var logger = new NullLogger<AuthController>();
         var repo = new WeitusRepository(context);
-        var jwtService = new JwtService(new MockConfiguration());
-        var userManager = new UserManager(repo, jwtService);
+        var jwtService = new JwtService(config);
+        var userManager = new UserManager(repo, jwtService, config);
 
         return new AuthController(logger, userManager, jwtService);
     }
