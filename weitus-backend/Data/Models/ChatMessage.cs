@@ -38,7 +38,7 @@ namespace weitus_backend.Data.Models
 
         [Column("bot_id")]
         [Required]
-        public int BotId { get; set; }
+        public Int16 BotId { get; set; }
 
         [JsonIgnore]
         public ChatBot Bot { get; set; }

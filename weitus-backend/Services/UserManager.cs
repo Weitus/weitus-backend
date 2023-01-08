@@ -60,10 +60,11 @@ public class UserManager
         var user = new WeitusUser
         {
             UserName = registerUser.UserName,
-            Email = registerUser.Email,
             PasswordHash = passwordHash,
             PasswordSalt = passwordSalt
         };
+
+        user.SetEncryptedEmail(registerUser.Email, Convert.FromHexString(_config["Encryption:Key"]), Convert.FromHexString(_config["Encryption:IV"]));
 
         await _userRepository.Add(user);
 

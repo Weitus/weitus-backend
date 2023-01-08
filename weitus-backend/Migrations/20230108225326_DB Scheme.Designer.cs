@@ -12,8 +12,8 @@ using weitus_backend.Data;
 namespace weitus_backend.Migrations
 {
     [DbContext(typeof(WeitusDbContext))]
-    [Migration("20230107201537_DB scheme")]
-    partial class DBscheme
+    [Migration("20230108225326_DB Scheme")]
+    partial class DBScheme
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,13 +26,13 @@ namespace weitus_backend.Migrations
 
             modelBuilder.Entity("weitus_backend.Data.Models.ChatBot", b =>
                 {
-                    b.Property<int>("ChatBotId")
+                    b.Property<short>("ChatBotId")
                         .ValueGeneratedOnAdd()
                         .HasPrecision(5)
                         .HasColumnType("NUMBER(5)")
                         .HasColumnName("bot_id");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChatBotId"), 1L, 1);
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<short>("ChatBotId"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -47,7 +47,7 @@ namespace weitus_backend.Migrations
                     b.HasData(
                         new
                         {
-                            ChatBotId = 1,
+                            ChatBotId = (short)1,
                             Name = "Weituś"
                         });
                 });
@@ -62,7 +62,7 @@ namespace weitus_backend.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChatMessageId"), 1L, 1);
 
-                    b.Property<int>("BotId")
+                    b.Property<short>("BotId")
                         .HasColumnType("NUMBER(5)")
                         .HasColumnName("bot_id");
 
@@ -107,8 +107,7 @@ namespace weitus_backend.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR2(100)")
+                        .HasColumnType("NVARCHAR2(2000)")
                         .HasColumnName("email");
 
                     b.Property<string>("PasswordHash")

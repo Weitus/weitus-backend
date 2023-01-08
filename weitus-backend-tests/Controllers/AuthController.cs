@@ -28,7 +28,7 @@ public class AuthControllerTests
 
         var config = new MockConfiguration();
         var logger = new NullLogger<AuthController>();
-        var repo = new WeitusRepository(context);
+        var repo = new WeitusRepository(context, config);
         var jwtService = new JwtService(config);
         var userManager = new UserManager(repo, jwtService, config);
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace weitus_backend.Migrations
 {
-    public partial class DBscheme : Migration
+    public partial class DBScheme : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace weitus_backend.Migrations
                 name: "CHAT_BOTS",
                 columns: table => new
                 {
-                    bot_id = table.Column<int>(type: "NUMBER(5)", precision: 5, nullable: false)
+                    bot_id = table.Column<short>(type: "NUMBER(5)", precision: 5, nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     name = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: false)
                 },
@@ -29,7 +29,7 @@ namespace weitus_backend.Migrations
                     user_id = table.Column<int>(type: "NUMBER(8)", precision: 8, nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
                     username = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
-                    email = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: false),
+                    email = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
                     password_hash = table.Column<string>(type: "NVARCHAR2(128)", maxLength: 128, nullable: false),
                     password_salt = table.Column<string>(type: "NVARCHAR2(128)", maxLength: 128, nullable: false)
                 },
@@ -48,7 +48,7 @@ namespace weitus_backend.Migrations
                     message = table.Column<string>(type: "NVARCHAR2(500)", maxLength: 500, nullable: false),
                     chatter_id = table.Column<int>(type: "NUMBER(8)", nullable: false),
                     sent_by_bot = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    bot_id = table.Column<int>(type: "NUMBER(5)", nullable: false)
+                    bot_id = table.Column<short>(type: "NUMBER(5)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,7 +69,7 @@ namespace weitus_backend.Migrations
             migrationBuilder.InsertData(
                 table: "CHAT_BOTS",
                 columns: new[] { "bot_id", "name" },
-                values: new object[] { 1, "Weituś" });
+                values: new object[] { (short)1, "Weituś" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CHAT_MESSAGES_bot_id",

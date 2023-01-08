@@ -12,7 +12,7 @@ namespace weitus_backend.Data.Models
         [Key]
         [Precision(5)]
         [Column("bot_id")]
-        public int ChatBotId { get; set; }
+        public Int16 ChatBotId { get; set; }
 
         [Required]
         [MaxLength(100)]

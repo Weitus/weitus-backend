@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -20,9 +21,9 @@ public class UserManagerTests
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
-        var repo = new WeitusRepository(context);
-        var jwtService = new JwtService(new MockConfiguration());
         var config = new MockConfiguration();
+        var repo = new WeitusRepository(context, config);
+        var jwtService = new JwtService(config);
 
         return new UserManager(repo, jwtService, config);
     }
@@ -124,6 +125,7 @@ public class UserManagerTests
     public async Task TestGetUserById()
     {
         var userManager = CreateUserManager();
+        var config = new MockConfiguration();
 
         var registerResult = await userManager.RegisterUserAsync(new RegisterUser()
         {
@@ -140,7 +142,7 @@ public class UserManagerTests
 
         Assert.Equal("test", user.UserName);
 
-        Assert.Equal("test@test.com", user.Email);
+        Assert.Equal("test@test.com", user.GetDecryptedEmail(Convert.FromHexString(config["Encryption:Key"]), Convert.FromHexString(config["Encryption:IV"])));
 
         Assert.Equal(registerResult.Value.UserId, user.UserId);
     }
@@ -149,6 +151,7 @@ public class UserManagerTests
     public async Task TestGetUserByUsername()
     {
         var userManager = CreateUserManager();
+        var config = new MockConfiguration();
 
         var registerResult = await userManager.RegisterUserAsync(new RegisterUser()
         {
@@ -165,7 +168,7 @@ public class UserManagerTests
 
         Assert.Equal("test", user.UserName);
 
-        Assert.Equal("test@test.com", user.Email);
+        Assert.Equal("test@test.com", user.GetDecryptedEmail(Convert.FromHexString(config["Encryption:Key"]), Convert.FromHexString(config["Encryption:IV"])));
 
         Assert.Equal(registerResult.Value.UserId, user.UserId);
     }
@@ -174,6 +177,7 @@ public class UserManagerTests
     public async Task TestGetUserByEmail()
     {
         var userManager = CreateUserManager();
+        var config = new MockConfiguration();
 
         var registerResult = await userManager.RegisterUserAsync(new RegisterUser()
         {
@@ -184,13 +188,13 @@ public class UserManagerTests
 
         Assert.True(registerResult.Success);
 
-        var user = await userManager.GetUserByEmailAsync(registerResult.Value.Email);
+        var user = await userManager.GetUserByEmailAsync("test@test.com");
 
         Assert.NotNull(user);
 
         Assert.Equal("test", user.UserName);
 
-        Assert.Equal("test@test.com", user.Email);
+        Assert.Equal("test@test.com", user.GetDecryptedEmail(Convert.FromHexString(config["Encryption:Key"]), Convert.FromHexString(config["Encryption:IV"])));
 
         Assert.Equal(registerResult.Value.UserId, user.UserId);
     }
@@ -199,6 +203,7 @@ public class UserManagerTests
     public async Task TestGetUserByClaims()
     {
         var userManager = CreateUserManager();
+        var config = new MockConfiguration();
 
         var registerResult = await userManager.RegisterUserAsync(new RegisterUser()
         {
@@ -218,7 +223,7 @@ public class UserManagerTests
 
         Assert.Equal("test", user.UserName);
 
-        Assert.Equal("test@test.com", user.Email);
+        Assert.Equal("test@test.com", user.GetDecryptedEmail(Convert.FromHexString(config["Encryption:Key"]), Convert.FromHexString(config["Encryption:IV"])));
 
         Assert.Equal(registerResult.Value.UserId, user.UserId);
     }

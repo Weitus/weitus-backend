@@ -18,14 +18,16 @@ public class JwtServiceTests
     public void TestGenerateToken()
     {
         var jwtService = CreateJwtService();
+        var config = new MockConfiguration();
 
         var user = new WeitusUser {
             UserId = 1,
             UserName = "test",
-            Email = "test@test.com",
             PasswordHash = "",
             PasswordSalt = ""
         };
+
+        user.SetEncryptedEmail("test@test.com", Convert.FromHexString(config["Encryption:Key"]), Convert.FromHexString(config["Encryption:IV"]));
 
         var token = jwtService.CreateToken(user);
 
@@ -86,12 +88,14 @@ public class JwtServiceTests
     public void TestValidateOurToken()
     {
         var jwtService = CreateJwtService();
+        var config = new MockConfiguration();
 
         var user = new WeitusUser {
             UserId = 1,
             UserName = "test",
-            Email = "test@test.com"
         };
+
+        user.SetEncryptedEmail("test@test.com", Convert.FromHexString(config["Encryption:Key"]), Convert.FromHexString(config["Encryption:IV"]));
 
         var token = jwtService.CreateToken(user);
 

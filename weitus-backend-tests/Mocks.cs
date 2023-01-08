@@ -20,6 +20,10 @@ class MockConfiguration : IConfiguration
                     return "0123456789ABCDEF0123456789ABCDEF";
                 case "Chat:Secret":
                     return "0123456789ABCDEF0123456789ABCDEF";
+                case "Encryption:Key":
+                    return "0123456789ABCDEF0123456789ABCDEF";
+                case "Encryption:IV":
+                    return "0123456789ABCDEF0123456789ABCDEF";
                 default:
                     return "";
             }

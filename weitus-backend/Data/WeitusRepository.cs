@@ -25,10 +25,12 @@ namespace weitus_backend.Data
     public class WeitusRepository : IWeitusRepository
     {
         private readonly WeitusDbContext _context;
+        private readonly IConfiguration _config;
 
-        public WeitusRepository(WeitusDbContext context)
+        public WeitusRepository(WeitusDbContext context, IConfiguration config)
         {
             _context = context;
+            _config = config;
         }
 
         public async Task<T> Add<T>(T entity) where T : class
@@ -83,7 +85,7 @@ namespace weitus_backend.Data
 
         public async Task<WeitusUser?> GetUserByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return _context.Users.AsEnumerable().FirstOrDefault(u => u.GetDecryptedEmail(Convert.FromHexString(_config["Encryption:Key"]), Convert.FromHexString(_config["Encryption:Key"])) == email);
         }
     }
 }
