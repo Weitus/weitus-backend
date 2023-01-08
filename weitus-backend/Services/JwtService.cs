@@ -9,7 +9,7 @@ namespace weitus_backend.Services
 {
 	public class JwtService
 	{
-		private const int EXPIRATION_MINUTES = 1;
+		private const int EXPIRATION_MINUTES = 30;
 
 		private readonly IConfiguration _configuration;
 

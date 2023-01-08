@@ -60,7 +60,7 @@ namespace weitus_backend.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChatMessageId"), 1L, 1);
 
-                    b.Property<int?>("BotId")
+                    b.Property<int>("BotId")
                         .HasColumnType("NUMBER(5)")
                         .HasColumnName("bot_id");
 
@@ -73,6 +73,10 @@ namespace weitus_backend.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("NVARCHAR2(500)")
                         .HasColumnName("message");
+
+                    b.Property<bool>("SentByBot")
+                        .HasColumnType("NUMBER(1)")
+                        .HasColumnName("sent_by_bot");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("TIMESTAMP(7)")
@@ -100,21 +104,25 @@ namespace weitus_backend.Migrations
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("NVARCHAR2(100)")
                         .HasColumnName("email");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("NVARCHAR2(128)")
                         .HasColumnName("password_hash");
 
                     b.Property<string>("PasswordSalt")
+                        .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("NVARCHAR2(128)")
                         .HasColumnName("password_salt");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("NVARCHAR2(50)")
                         .HasColumnName("username");

@@ -14,22 +14,27 @@ namespace weitus_backend.Data.Models
         [Key]
         [Precision(8)]
         [Column("user_id")]
+        [Required]
         public int UserId { get; set; }
 
         [MaxLength(50)]
         [Column("username")]
+        [Required]
         public string UserName { get; set; }
 
         [MaxLength(100)]
         [Column("email")]
+        [Required]
         public string Email { get; set; }
 
         [MaxLength(PasswordHashLength * 2)]
         [Column("password_hash")]
+        [Required]
         public string PasswordHash { get; set; }
 
         [MaxLength(PasswordHashLength * 2)]
         [Column("password_salt")]
+        [Required]
         public string PasswordSalt { get; set; }
 
         [JsonIgnore]

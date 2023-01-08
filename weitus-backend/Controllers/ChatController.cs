@@ -37,7 +37,7 @@ namespace weitus_backend.Controllers
             {
                 ChatterId = user.UserId,
                 Message = chatMessageDto.Message,
-                BotId = null,
+                BotId = chatMessageDto.BotId,
                 TimeStamp = DateTime.Now
             };
 
@@ -48,7 +48,7 @@ namespace weitus_backend.Controllers
 
         [Authorize]
         [HttpPost("botMessage")]
-        public async Task<IActionResult> RegisterBotMessage([FromBody] SendBotChatMessage chatMessageDto)
+        public async Task<IActionResult> RegisterBotMessage([FromBody] SendChatMessage chatMessageDto)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace weitus_backend.Controllers
             {
                 ChatterId = user.UserId,
                 Message = chatMessageDto.Message,
-                BotId = chatMessageDto.BotId ?? 1,
+                BotId = chatMessageDto.BotId,
                 TimeStamp = DateTime.Now
             };
 

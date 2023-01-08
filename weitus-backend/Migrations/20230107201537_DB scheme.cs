@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace weitus_backend.Migrations
 {
-    public partial class Startover : Migration
+    public partial class DBscheme : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,10 +28,10 @@ namespace weitus_backend.Migrations
                 {
                     user_id = table.Column<int>(type: "NUMBER(8)", precision: 8, nullable: false)
                         .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    username = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: true),
-                    email = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: true),
-                    password_hash = table.Column<string>(type: "NVARCHAR2(128)", maxLength: 128, nullable: true),
-                    password_salt = table.Column<string>(type: "NVARCHAR2(128)", maxLength: 128, nullable: true)
+                    username = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
+                    email = table.Column<string>(type: "NVARCHAR2(100)", maxLength: 100, nullable: false),
+                    password_hash = table.Column<string>(type: "NVARCHAR2(128)", maxLength: 128, nullable: false),
+                    password_salt = table.Column<string>(type: "NVARCHAR2(128)", maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,7 +47,8 @@ namespace weitus_backend.Migrations
                     timestamp = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
                     message = table.Column<string>(type: "NVARCHAR2(500)", maxLength: 500, nullable: false),
                     chatter_id = table.Column<int>(type: "NUMBER(8)", nullable: false),
-                    bot_id = table.Column<int>(type: "NUMBER(5)", nullable: true)
+                    sent_by_bot = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                    bot_id = table.Column<int>(type: "NUMBER(5)", nullable: false)
                 },
                 constraints: table =>
                 {

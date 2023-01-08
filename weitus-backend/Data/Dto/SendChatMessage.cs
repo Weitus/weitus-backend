@@ -9,5 +9,8 @@ namespace weitus_backend.Data.Dto
 		[Required]
 		[MaxLength(500)]
 		public string Message { get; set; }
+
+		[Required]
+		public int BotId { get; set; }
 	}
 }

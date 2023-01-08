@@ -84,7 +84,18 @@ public class UserManager
             return Result<AuthenticationResponse>.Err("Bad username/password combination");
         }
 
-        return Result<AuthenticationResponse>.Ok(_jwtService.CreateToken(user));
+        var response = _jwtService.CreateToken(user);
+
+        response.ChatIdentifier = GetChatSessionId(user);
+
+        return Result<AuthenticationResponse>.Ok(response);
+    }
+
+    private string GetChatSessionId(WeitusUser user)
+    {
+        var hash = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(user.UserName + user.UserId + user.PasswordSalt));
+
+        return Convert.ToBase64String(hash);
     }
 
     private async Task<Result> EnsureUserIsValid(RegisterUser user)

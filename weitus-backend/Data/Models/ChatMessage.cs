@@ -32,8 +32,13 @@ namespace weitus_backend.Data.Models
         [JsonIgnore]
         public WeitusUser Chatter { get; set; }
 
+        [Column("sent_by_bot")]
+        [Required]
+        public bool SentByBot { get; set; }
+
         [Column("bot_id")]
-        public int? BotId { get; set; }
+        [Required]
+        public int BotId { get; set; }
 
         [JsonIgnore]
         public ChatBot Bot { get; set; }
