@@ -85,7 +85,7 @@ namespace weitus_backend.Data
 
         public async Task<WeitusUser?> GetUserByEmailAsync(string email)
         {
-            return _context.Users.AsEnumerable().FirstOrDefault(u => u.GetDecryptedEmail(Convert.FromHexString(_config["Encryption:Key"]), Convert.FromHexString(_config["Encryption:Key"])) == email);
+            return _context.Users.AsEnumerable().FirstOrDefault(u => u.GetDecryptedEmail(Convert.FromHexString(_config["Encryption:Key"]), Convert.FromHexString(_config["Encryption:IV"])) == email);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace weitus_backend.Data.Models
 
         [Column("email")]
         [Required]
-        private string EncryptedEmail { get; set; }
+        public string EncryptedEmail { get; set; }
 
         [MaxLength(PasswordHashLength * 2)]
         [Column("password_hash")]
