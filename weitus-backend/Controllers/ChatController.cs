@@ -38,6 +38,7 @@ namespace weitus_backend.Controllers
                 ChatterId = user.UserId,
                 Message = chatMessageDto.Message,
                 BotId = chatMessageDto.BotId,
+                SentByBot = false,
                 TimeStamp = DateTime.Now
             };
 
@@ -62,6 +63,7 @@ namespace weitus_backend.Controllers
                 ChatterId = user.UserId,
                 Message = chatMessageDto.Message,
                 BotId = chatMessageDto.BotId,
+                SentByBot = true,
                 TimeStamp = DateTime.Now
             };
 
