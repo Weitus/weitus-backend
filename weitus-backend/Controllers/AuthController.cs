@@ -22,11 +22,6 @@ namespace weitus_backend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUser registerUser)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var result = await _userManager.RegisterUserAsync(registerUser);
 
             if (result.Success)
@@ -40,14 +35,6 @@ namespace weitus_backend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUser loginUser)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new ErrorResponse()
-                {
-                    Message = "Invalid login data"
-                });
-            }
-
             var authResponse = await _userManager.LoginUserAsync(loginUser);
 
             if (!authResponse.Success)

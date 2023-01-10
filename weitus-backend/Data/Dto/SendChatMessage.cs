@@ -11,6 +11,6 @@ namespace weitus_backend.Data.Dto
 		public string Message { get; set; }
 
 		[Required]
-		public short BotId { get; set; }
+		public short? BotId { get; set; }
 	}
 }

@@ -1,0 +1,7 @@
+**/bin/
+**/obj/
+**/out/
+
+Dockerfile
+./weitus-backend-tests
+./weitus-backend.sln

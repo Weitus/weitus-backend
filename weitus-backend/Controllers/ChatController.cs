@@ -26,9 +26,20 @@ namespace weitus_backend.Controllers
         [HttpPost("message")]
         public async Task<IActionResult> SendMessage([FromBody] SendChatMessage chatMessageDto)
         {
-            if (!ModelState.IsValid)
+            if (chatMessageDto.BotId == null)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ErrorResponse
+                {
+                    Message = "BotId is required"
+                });
+            }
+
+            if (await _repo.GetChatBot(chatMessageDto.BotId.Value) == null)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Message = "BotId is invalid"
+                });
             }
 
             var user = await _userManager.GetUserAsync(User);
@@ -37,7 +48,7 @@ namespace weitus_backend.Controllers
             {
                 ChatterId = user.UserId,
                 Message = chatMessageDto.Message,
-                BotId = chatMessageDto.BotId,
+                BotId = chatMessageDto.BotId.Value,
                 SentByBot = false,
                 TimeStamp = DateTime.Now
             };
@@ -51,9 +62,20 @@ namespace weitus_backend.Controllers
         [HttpPost("botMessage")]
         public async Task<IActionResult> RegisterBotMessage([FromBody] SendChatMessage chatMessageDto)
         {
-            if (!ModelState.IsValid)
+            if (chatMessageDto.BotId == null)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new ErrorResponse
+                {
+                    Message = "BotId is required"
+                });
+            }
+
+            if (await _repo.GetChatBot(chatMessageDto.BotId.Value) == null)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Message = "BotId is invalid"
+                });
             }
 
             var user = await _userManager.GetUserAsync(User);
@@ -62,7 +84,7 @@ namespace weitus_backend.Controllers
             {
                 ChatterId = user.UserId,
                 Message = chatMessageDto.Message,
-                BotId = chatMessageDto.BotId,
+                BotId = chatMessageDto.BotId.Value,
                 SentByBot = true,
                 TimeStamp = DateTime.Now
             };
