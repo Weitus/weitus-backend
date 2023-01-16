@@ -34,7 +34,7 @@ public class ChatControllerTests
         var userManager = new UserManager(repo, jwtService, config);
 
         var chatController = new ChatController(new NullLogger<ChatController>(), repo, userManager);
-        var authController = new AuthController(new NullLogger<AuthController>(), userManager, jwtService);
+        var authController = new AuthController(new NullLogger<AuthController>(), userManager);
         return (chatController, authController);
     }
 

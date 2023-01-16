@@ -32,7 +32,7 @@ public class AuthControllerTests
         var jwtService = new JwtService(config);
         var userManager = new UserManager(repo, jwtService, config);
 
-        return new AuthController(logger, userManager, jwtService);
+        return new AuthController(logger, userManager);
     }
 
     [Fact]

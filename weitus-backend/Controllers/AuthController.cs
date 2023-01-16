@@ -10,13 +10,11 @@ namespace weitus_backend.Controllers
     {
         private readonly ILogger<AuthController> _logger;
         private readonly UserManager _userManager;
-        private readonly JwtService _jwtService;
 
-        public AuthController(ILogger<AuthController> logger, UserManager userManager, JwtService jwtService)
+        public AuthController(ILogger<AuthController> logger, UserManager userManager)
         {
             _logger = logger;
             _userManager = userManager;
-            _jwtService = jwtService;
         }
 
         [HttpPost("register")]
