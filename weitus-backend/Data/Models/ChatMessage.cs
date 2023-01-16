@@ -19,7 +19,7 @@ namespace weitus_backend.Data.Models
         [Column("timestamp")]
         public DateTime TimeStamp { get; set; }
 
-        [StringLength(500)]
+        [StringLength(2000)]
         [ProtectedPersonalData]
         [Required]
         [Column("message")]
