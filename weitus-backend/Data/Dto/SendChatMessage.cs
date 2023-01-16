@@ -7,7 +7,7 @@ namespace weitus_backend.Data.Dto
 	public class SendChatMessage
 	{
 		[Required]
-		[MaxLength(500)]
+		[MaxLength(2000)]
 		public string Message { get; set; }
 
 		[Required]
